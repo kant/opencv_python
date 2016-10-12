@@ -13,14 +13,12 @@
 - Show optical flow results of the input images
 - SURF feature based `cv2.calcOpticalFlowPyrLK`
 - `cv2.calcOpticalFlowFarneback`
-- `cv.calcOpticalFlowFarneback`
-
 
 
 `opticalflow_roi.py`
 - Show optical flow results of the manually selected ROI region of the input images
+- SURF feature based `cv2.calcOpticalFlowPyrLK`
 - `cv2.calcOpticalFlowFarneback`
-- `cv.calcOpticalFlowFarneback`
 
 
 `opticalflow_image_sequence.py`
@@ -29,10 +27,13 @@
 	- Bouding Box Ground Truth based on previous image
 	- SURF Points Results
 	- Dense Flow Results
+- SURF feature based `cv2.calcOpticalFlowPyrLK`
 - `cv2.calcOpticalFlowFarneback`
-- `cv.calcOpticalFlowFarneback`
-- ![](imgs_for_readme/161012.4.Near_All_Results.png)
-- ![](imgs_for_readme/161012.3.Near_HSV.png)
-- ![](imgs_for_readme/161012.2.Far_All_Results.png)
 - ![](imgs_for_readme/161012.1.Far_HSV.png)
+- ![](imgs_for_readme/161012.2.Far_All_Results.png)
+- ![](imgs_for_readme/161012.3.Near_HSV.png)
+- ![](imgs_for_readme/161012.4.Near_All_Results.png)
+
+
+
 
