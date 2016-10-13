@@ -71,7 +71,8 @@ def image_process(img_last_rgb, img_curr_rgb):
   flag_predict_use_Dense = False
   flag_whole_imag_test = False
   # Get BBox Ground Truth by groudtruth
-  row = ground_truth_array[index-1]
+  #print index
+  row = ground_truth_array[index]
   print ('bbox_gt:', row)
 
   if len(img_curr_rgb.shape) < 3:  
@@ -177,6 +178,13 @@ def image_process(img_last_rgb, img_curr_rgb):
   str_temp = '| BBox Extend'
   cv2.putText(img_curr_rgb_clone,str_temp,(130,30), font, 0.5,(0,0,255),2)
   cv2.namedWindow('Ground Truth', cv2.WINDOW_AUTOSIZE)
+  total_frame = len(ground_truth_array);
+  current_frame_str = 'Frame: '
+  current_frame_str += str(index)
+  current_frame_str += ' / '
+  current_frame_str += str(total_frame);
+  print ('img_rows', img_rows)
+  cv2.putText(img_curr_rgb_clone,current_frame_str,(10, int(img_rows - 20)), font, 0.5,(255,255,255),2)
   cv2.imshow('Ground Truth',img_curr_rgb_clone)
   cv2.moveWindow('Ground Truth', 100, 100)
   #cv2.waitKey(0)
@@ -515,7 +523,7 @@ def get_image_ground_truth(image_folder):
   #csv_reader = csv.reader(test_file, delimiter='\t')
   #for row in csv_reader:
   #  csv_ground_truth_array.append(row)
-  ground_truth_array = np.genfromtxt(original_filename, dtype=float, delimiter=',', names=True) 
+  ground_truth_array = np.genfromtxt(original_filename, dtype=float, delimiter=',') 
   #print ground_truth_array.shape
 if __name__ == "__main__":
   # execute only if run as a script 
