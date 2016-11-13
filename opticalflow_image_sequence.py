@@ -1,9 +1,9 @@
-
 import cv
 import sys
 import cv2
 import numpy as np
 import csv
+import math
 #import matplotlib.pyplot as plt
 font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -199,7 +199,7 @@ def image_process(img_last_rgb, img_curr_rgb):
   #cv2.imshow('input_img_curr',input_img_curr)
 
   #print ('input_img_prev', input_img_prev.shape)
-
+  
 
 
   # --------------------  SURF Points --------------- #
@@ -485,6 +485,72 @@ def image_process(img_last_rgb, img_curr_rgb):
     prev_bbx_x2 = predict_bbox_dense_x2
     prev_bbx_y2 = predict_bbox_dense_y2
 
+
+  # --- Test Morphological Filter -------------#
+  kernel = cv2.getStructuringElement(cv2.MORPH_CROSS,(5,5))
+
+  prev_img_gray = cv2.cvtColor(inputImg1, cv2.COLOR_BGR2GRAY)
+  curr_img_gray = cv2.cvtColor(inputImg2, cv2.COLOR_BGR2GRAY)
+
+  print ('kernel', kernel)  
+  img_closing = cv2.morphologyEx(curr_img_gray, cv2.MORPH_CLOSE, kernel)
+  cv2.namedWindow('Current Closing', cv2.WINDOW_AUTOSIZE)
+  cv2.imshow('Current Closing',img_closing) 
+
+  img_opening = cv2.morphologyEx(curr_img_gray, cv2.MORPH_OPEN, kernel)  
+  cv2.namedWindow('Current Open', cv2.WINDOW_AUTOSIZE)
+  cv2.imshow('Current Open',img_opening)   
+
+  img_minus = img_closing - img_opening;
+  cv2.namedWindow('Current Close - Open', cv2.WINDOW_AUTOSIZE)
+  cv2.imshow('Current Close - Open',img_minus)   
+
+  #abs_diff_img = prev_img_gray.copy()
+  abs_diff_img = cv2.absdiff(curr_img_gray, prev_img_gray)
+  cv2.namedWindow('Current Difference', cv2.WINDOW_AUTOSIZE)
+  cv2.imshow('Current Difference',abs_diff_img)   
+
+  adaptive_img = cv2.adaptiveThreshold(img_minus,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY_INV,5,2)
+  cv2.namedWindow('THRESH_OTSU', cv2.WINDOW_AUTOSIZE)
+  cv2.imshow('THRESH_OTSU',adaptive_img)   
+  # param_w = 2
+  # windos_size = 2*param_w + 1;
+  # img_rows, img_cols = curr_img_gray.shape
+  # filter_img = curr_img_gray.copy()
+  
+  # print ('row, cols',img_rows, img_cols)
+
+  # for row_ind in range(int(math.floor(windos_size)), img_rows - int(math.floor(windos_size))):
+  #   for column_ind in range(int(math.floor(windos_size)), img_cols - int(math.floor(windos_size))):
+  #     max_1 = 0;      
+  #     curr_pixel = curr_img_gray[row_ind, column_ind]      
+  #     for max_i in range(-param_w, param_w):
+  #       min_1 = 999;
+  #       for min_j in range(-param_w, param_w):          
+  #          if curr_img_gray[row_ind + max_i + min_j, column_ind] < min_1:
+  #           min_1 = curr_img_gray[row_ind + max_i + min_j, column_ind]
+  #       if min_1 > max_1:
+  #         max_1 = min_1
+
+  #     max_2 = 0;
+  #     for max_i in range(-param_w, param_w):
+  #       min_2 = 999;
+  #       for min_j in range(-param_w, param_w):
+  #         if curr_img_gray[row_ind + max_i + min_j, column_ind] < min_2:
+  #           min_2 = curr_img_gray[row_ind + max_i + min_j, column_ind]
+  #       if min_2 > max_2:
+  #         max_2 = min_2
+  #   curr_img_gray[row_ind, column_ind] = curr_pixel - max(max_1, max_2)
+
+  # cv2.namedWindow('Current positive filter', cv2.WINDOW_AUTOSIZE)
+  # cv2.imshow('Current positive filter',curr_img_gray)  
+
+        # crop_x = column_ind - math.floor(windos_size/2);
+        # crop_y = row_ind - math.floor(windos_size/2);
+        # crop_img = curr_img_gray[crop_y:crop_y+windos_size-1, crop_x:crop_x+windos_size-1]
+
+
+
 def get_image_sequence(image_folder):
   global clone, index
   img_directory = image_folder
@@ -527,7 +593,9 @@ def get_image_ground_truth(image_folder):
   #print ground_truth_array.shape
 if __name__ == "__main__":
   # execute only if run as a script 
-  image_folder = '151121_Fixed_Wing_Both_Right_Final' #landing_data_2_left
+  image_folder = '151221_Fixed_Wing_Right_Select_2'# ' #
+  #image_folder = 'landing_data_2_left'
+  #image_folder = '151121_Fixed_Wing_Both_Right_Final'
   get_image_ground_truth(image_folder)
   get_image_sequence(image_folder) 
   cv2.waitKey(0)
