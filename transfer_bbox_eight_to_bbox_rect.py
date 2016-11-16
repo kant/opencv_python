@@ -75,7 +75,7 @@ def save_bbox_in_rect_format(image_folder):
 
 if __name__ == "__main__":
   # execute only if run as a script 
-  image_folder = './151121_Fixed_Wing_Both_Right_Final' #landing_data_2_left
+  image_folder = './151221_Fixed_Wing_Right_Select_2' #landing_data_2_left
   get_image_ground_truth(image_folder)
   save_bbox_in_rect_format(image_folder)
   #get_image_sequence(image_folder) 

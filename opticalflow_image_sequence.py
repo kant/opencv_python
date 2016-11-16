@@ -491,22 +491,56 @@ def image_process(img_last_rgb, img_curr_rgb):
 
   prev_img_gray = cv2.cvtColor(inputImg1, cv2.COLOR_BGR2GRAY)
   curr_img_gray = cv2.cvtColor(inputImg2, cv2.COLOR_BGR2GRAY)
+  print ('kernel', kernel)
 
-  print ('kernel', kernel)  
+  e1_closing = cv2.getTickCount()
   img_closing = cv2.morphologyEx(curr_img_gray, cv2.MORPH_CLOSE, kernel)
+  e2_closing = cv2.getTickCount()
+  time_closing = (e2_closing - e1_closing)/ cv2.getTickFrequency()
+
+  e1_opening = cv2.getTickCount()
+  img_opening = cv2.morphologyEx(curr_img_gray, cv2.MORPH_OPEN, kernel)  
+  e2_opening = cv2.getTickCount()
+  time_opening = (e2_opening - e1_opening)/ cv2.getTickFrequency()
+
+  img_minus = img_closing - img_opening;
+  time_minus = (e2_opening - e1_closing)/ cv2.getTickFrequency()
+
+  str_temp = 'Closing Operation' 
+  str_temp += ' | Time: '
+  str_temp += str(time_closing)[:5]
+  str_temp += ' s' 
+  cv2.putText(img_closing,str_temp,(10,30), font, 0.5,(255,255,255),2)
+  cv2.putText(img_closing,current_frame_str,(10, int(img_rows - 20)), font, 0.5,(255,255,255),2)
   cv2.namedWindow('Current Closing', cv2.WINDOW_AUTOSIZE)
   cv2.imshow('Current Closing',img_closing) 
 
-  img_opening = cv2.morphologyEx(curr_img_gray, cv2.MORPH_OPEN, kernel)  
+  str_temp = 'Opening Operation'
+  str_temp += ' | Time: '
+  str_temp += str(time_opening)[:5]
+  str_temp += ' s' 
+  cv2.putText(img_opening,str_temp,(10,30), font, 0.5,(255,255,255),2)
   cv2.namedWindow('Current Open', cv2.WINDOW_AUTOSIZE)
-  cv2.imshow('Current Open',img_opening)   
+  cv2.putText(img_opening,current_frame_str,(10, int(img_rows - 20)), font, 0.5,(255,255,255),2)
+  cv2.imshow('Current Open',img_opening) 
 
-  img_minus = img_closing - img_opening;
+
+  str_temp = 'Synthetical Morphological Filtering'
+  str_temp += ' | Time: '
+  str_temp += str(time_minus)[:5]
+  str_temp += ' s' 
   cv2.namedWindow('Current Close - Open', cv2.WINDOW_AUTOSIZE)
+  cv2.putText(img_minus,str_temp,(10,30), font, 0.5,(255,255,255),2)
+  cv2.putText(img_minus,current_frame_str,(10, int(img_rows - 20)), font, 0.5,(255,255,255),2)
   cv2.imshow('Current Close - Open',img_minus)   
+
 
   #abs_diff_img = prev_img_gray.copy()
   abs_diff_img = cv2.absdiff(curr_img_gray, prev_img_gray)
+  str_temp = 'AbsDiff '
+  str_temp += ' | Time: '
+  str_temp += str(time_minus)[:5]
+  str_temp += ' s' 
   cv2.namedWindow('Current Difference', cv2.WINDOW_AUTOSIZE)
   cv2.imshow('Current Difference',abs_diff_img)   
 
