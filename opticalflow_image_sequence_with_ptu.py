@@ -210,6 +210,7 @@ def image_process(img_last_rgb, img_curr_rgb):
   # ----- Detect ROI Edge ------- #
   # gray = cv2.cvtColor(input_img_prev,cv2.COLOR_BGR2GRAY)
   img_gray_for_edge = input_img_prev  
+  img_gray_for_edge = cv2.equalizeHist(img_gray_for_edge)
   edges = cv2.Canny(img_gray_for_edge,50,150,apertureSize = 3)
   minLineLength = 10  
   maxLineGap = 10
