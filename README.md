@@ -1,6 +1,6 @@
 # System Requirement
 - Ubuntu 14.04.5
-- Python 2.7.12 (Using Anconda 4.2.9)
+- Python 2.7.12 (Using Anaconda 4.2.9)
 - Opencv 2.4.11
 
 # File Details
